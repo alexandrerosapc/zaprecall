@@ -15,7 +15,6 @@ const ContainerFooter = styled.div`
     background-color: white;
     display: flex;
     justify-content: center;
-    position: fixed;
     width: 100%;
     height: 10%;
     bottom: 0;

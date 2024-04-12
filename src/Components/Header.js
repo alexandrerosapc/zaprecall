@@ -11,8 +11,9 @@ export default function Header() {
 
 const Title = styled.div`
     width: 68% ;
-    height: 20%;
+    height: auto;
     margin: auto;
+    margin-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
