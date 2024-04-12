@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import cards from "./Cards";
+import certo from "../assets/img/icone_certo.png";
+import erro from "../assets/img/icone_erro.png";
+import quase from "../assets/img/icone_quase.png";
 
 export default function Main() {
   const [clicked, setClicked] = useState([false, false, false, false]);
@@ -75,7 +78,16 @@ export default function Main() {
               onClick={() => returnQuestions(i)}
             >
               <p>{`Pergunta ${i + 1}`}</p>
-              <ion-icon name=""></ion-icon>
+              <ReturnedImage
+                src={
+                  selectedColors[i] === "#2FBE34"
+                    ? certo
+                    : selectedColors[i] === "#FF3030"
+                    ? erro
+                    : quase
+                }
+                alt="Ícone de Status"
+              />
             </ReturnedQuestion>
           ) : showed[i] ? (
             <Answer showed={showed[i] ? "true" : "false"}>
@@ -204,10 +216,10 @@ const ReturnedQuestion = styled.div`
     line-height: 19px;
     font-family: "Righteous", sans-serif;
     text-decoration: line-through;
-  }
-  ion-icon {
-    margin-right: 15px;
-    width: 20px;
-    height: 23px;
-  }
+  }`;
+
+const ReturnedImage = styled.img`
+  margin-right: 15px;
+  width: 20px;
+  height: 23px;
 `;
