@@ -6,8 +6,9 @@ export default function Main() {
   const [clicked, setClicked] = useState([false, false, false, false]);
   const [randomIndexes, setRandomIndexes] = useState([]);
   const [showed, setShowed] = useState([false, false, false, false]);
-  const opcoes = ["Não lembrei", "Quase não lembrei", "Zap!"]
-  const [returned, setReturned] = useState([false, false, false, false])
+  const opcoes = ["Não lembrei", "Quase não lembrei", "Zap!"];
+  const [returned, setReturned] = useState([false, false, false, false]);
+  const [selectedColors, setSelectedColors] = useState(["", "", "", ""]);
 
   useEffect(() => {
     // Gerando 4 índices aleatórios únicos
@@ -28,32 +29,50 @@ export default function Main() {
   }
 
   function showOptions(index) {
-    setShowed(prevShowed => {
+    setShowed((prevShowed) => {
       const newShowed = [...prevShowed];
       newShowed[index] = true; // Alternando o estado de 'showed'
       return newShowed;
     });
   }
-  
-  function returnQuestions(index) {
-    setClicked([false,false,false,false])
-    setShowed([false,false,false,false])
+
+  function returnQuestions(index, optionIndex) {
+    setClicked([false, false, false, false]);
+    setShowed([false, false, false, false]);
     if (!returned[index]) {
-      setReturned(prevReturned => {
+      setReturned((prevReturned) => {
         const newReturned = [...prevReturned];
-        newReturned[index] = true; // Define apenas a pergunta clicada como retornada
+        newReturned[index] = true;
         return newReturned;
+      });
+
+      let color = "";
+      if (opcoes[optionIndex] === opcoes[0]) {
+        color = "#FF3030";
+      } else if (opcoes[optionIndex] === opcoes[1]) {
+        color = "#FF922E";
+      } else if (opcoes[optionIndex] === opcoes[2]) {
+        color = "#2FBE34";
+      }
+
+      // Armazenar a cor selecionada para a nova ReturnedQuestion
+      setSelectedColors((prevColors) => {
+        const newColors = [...prevColors];
+        newColors[index] = color;
+        return newColors;
       });
     }
   }
-  
+
   return (
     <Questions>
       {randomIndexes.map((index, i) => (
         <div key={i}>
           {returned[i] ? (
             <ReturnedQuestion
-            index={returned[i]}
+              as="div" // Renderizar como div
+              color={selectedColors[i]}
+              onClick={() => returnQuestions(i)}
             >
               <p>{`Pergunta ${i + 1}`}</p>
               <ion-icon name=""></ion-icon>
@@ -66,7 +85,7 @@ export default function Main() {
                   <Option
                     key={optionIndex}
                     index={optionIndex}
-                    onClick={() => returnQuestions(i)}
+                    onClick={() => returnQuestions(i, optionIndex)}
                   >
                     {option}
                   </Option>
@@ -75,16 +94,16 @@ export default function Main() {
             </Answer>
           ) : (
             <Question
+              as="div" // Renderizar como div
               onClick={() => showQuestion(i)}
-              clicked={clicked[i] ? "true" : "false"}
-              returned={returned[i] ? "true" : "false"}
+              showed={showed[i] ? "true" : "false"}
             >
               <p>{clicked[i] ? cards[index].question : `Pergunta ${i + 1}`}</p>
               <ion-icon
                 name={clicked[i] ? "sync" : "play-outline"}
                 onClick={() => {
-                  showOptions(i)}
-                }
+                  showOptions(i);
+                }}
               ></ion-icon>
             </Question>
           )}
@@ -132,13 +151,13 @@ const Answer = styled.div`
   display: ${(props) => (props.showed === "true" ? "flex" : "none")};
   flex-direction: column;
   justify-content: space-around;
-  background-color: #FFFFD4;
+  background-color: #ffffd4;
   height: 130px;
   border-radius: 5px;
   box-shadow: 0px 4px 5px 0px #00000026;
   cursor: pointer;
   font-family: "Righteous", sans-serif;
-  p{
+  p {
     margin-left: 15px;
   }
 `;
@@ -161,11 +180,11 @@ const Option = styled.div`
   font-weight: 400;
   line-height: 14px;
   background-color: ${(props) => {
-    if (props.index === 0) return "#FF3030"
-    if (props.index === 1) return "#FF922E"
-    if (props.index === 2) return "#2FBE34"
+    if (props.index === 0) return "#FF3030";
+    if (props.index === 1) return "#FF922E";
+    if (props.index === 2) return "#2FBE34";
   }};
-`
+`;
 
 const ReturnedQuestion = styled.div`
   width: 100%;
@@ -174,11 +193,7 @@ const ReturnedQuestion = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: white;
-  color: ${(props) => {
-    if (props.index === 0) return "#FF3030"
-    if (props.index === 1) return "#FF922E"
-    if (props.index === 2) return "#2FBE34"
-  }};
+  color: ${(props) => props.color}; // Cor dinâmica baseada no estado
   border-radius: 5px;
   box-shadow: 0px 4px 5px 0px #00000026;
   cursor: pointer;
@@ -195,4 +210,4 @@ const ReturnedQuestion = styled.div`
     width: 20px;
     height: 23px;
   }
-`
+`;
