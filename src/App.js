@@ -68,7 +68,7 @@ function App() {
         return newColors;
       });
     }
-    setCompletedCount((prevCount) => prevCount + 1);
+    if (completedCount < 4) { setCompletedCount((prevCount) => prevCount + 1); }
   }
 
   return (
@@ -76,20 +76,20 @@ function App() {
       <GlobalStyle />
       <Container>
         <Header />
-        <Main 
-        randomIndexes={randomIndexes}
-        returned={returned}
-        selectedColors={selectedColors}
-        returnQuestions={returnQuestions}
-        showed={showed}
-        cards={cards}
-        opcoes={opcoes}
-        showQuestion={showQuestion}
-        clicked={clicked}
-        showOptions={showOptions}
+        <Main
+          randomIndexes={randomIndexes}
+          returned={returned}
+          selectedColors={selectedColors}
+          returnQuestions={returnQuestions}
+          showed={showed}
+          cards={cards}
+          opcoes={opcoes}
+          showQuestion={showQuestion}
+          clicked={clicked}
+          showOptions={showOptions}
         />
         <Footer
-        completedCount={completedCount}
+          completedCount={completedCount}
         />
       </Container>
     </>

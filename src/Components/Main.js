@@ -47,6 +47,7 @@ export default function Main({randomIndexes,returned,selectedColors,returnQuesti
               as="div" // Renderizar como div
               onClick={() => showQuestion(i)}
               showed={showed[i] ? "true" : "false"}
+              clicked={clicked[i]? "true" : "false"}
             >
               <p>{clicked[i] ? cards[index].question : `Pergunta ${i + 1}`}</p>
               <ion-icon
