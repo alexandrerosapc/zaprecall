@@ -1,23 +1,27 @@
-import Header from "./Components/Header";
-import Main from "./Components/Main";
-import Footer from "./Components/Footer";
-import GlobalStyle from "./GlobalStyle";
-import styled from "styled-components";
-import { useState } from "react";
-import { useEffect } from "react";
-import cards from "../src/Components/Cards"
+import React, { useState, useEffect } from 'react';
+import { Container } from './Components/StyledComponents';
+import Header from './Components/Header';
+import Main from './Components/Main';
+import Footer from './Components/Footer';
+import GlobalStyle from './GlobalStyle';
+import cards from './Components/Cards';
+
+const initialArray = Array(4).fill(false);
 
 function App() {
-  const [clicked, setClicked] = useState([false, false, false, false]);
+  const [clicked, setClicked] = useState(initialArray);
   const [randomIndexes, setRandomIndexes] = useState([]);
-  const [showed, setShowed] = useState([false, false, false, false]);
-  const opcoes = ["Não lembrei", "Quase não lembrei", "Zap!"];
-  const [returned, setReturned] = useState([false, false, false, false]);
-  const [selectedColors, setSelectedColors] = useState(["", "", "", ""]);
+  const [showed, setShowed] = useState(initialArray);
+  const opcoes = ['Não lembrei', 'Quase não lembrei', 'Zap!'];
+  const [returned, setReturned] = useState(initialArray);
+  const [selectedColors, setSelectedColors] = useState(initialArray);
   const [completedCount, setCompletedCount] = useState(0);
 
   useEffect(() => {
-    // Gerando 4 índices aleatórios únicos
+    generateRandomIndexes();
+  }, []);
+
+  const generateRandomIndexes = () => {
     const newRandomIndexes = [];
     while (newRandomIndexes.length < 4) {
       const newIndex = Math.floor(Math.random() * cards.length);
@@ -26,25 +30,25 @@ function App() {
       }
     }
     setRandomIndexes(newRandomIndexes);
-  }, []);
+  };
 
-  function showQuestion(index) {
+  const showQuestion = (index) => {
     const newClicked = [...clicked];
     newClicked[index] = true;
     setClicked(newClicked);
-  }
+  };
 
-  function showOptions(index) {
+  const showOptions = (index) => {
     setShowed((prevShowed) => {
       const newShowed = [...prevShowed];
-      newShowed[index] = true; // Alternando o estado de 'showed'
+      newShowed[index] = true;
       return newShowed;
     });
-  }
+  };
 
-  function returnQuestions(index, optionIndex) {
-    setClicked([false, false, false, false]);
-    setShowed([false, false, false, false]);
+  const returnQuestions = (index, optionIndex) => {
+    const newClicked = initialArray;
+    const newShowed = initialArray;
     if (!returned[index]) {
       setReturned((prevReturned) => {
         const newReturned = [...prevReturned];
@@ -52,24 +56,33 @@ function App() {
         return newReturned;
       });
 
-      let color = "";
-      if (opcoes[optionIndex] === opcoes[0]) {
-        color = "#FF3030";
-      } else if (opcoes[optionIndex] === opcoes[1]) {
-        color = "#FF922E";
-      } else if (opcoes[optionIndex] === opcoes[2]) {
-        color = "#2FBE34";
+      let color = '';
+      switch (opcoes[optionIndex]) {
+        case opcoes[0]:
+          color = '#FF3030';
+          break;
+        case opcoes[1]:
+          color = '#FF922E';
+          break;
+        case opcoes[2]:
+          color = '#2FBE34';
+          break;
+        default:
+          break;
       }
 
-      // Armazenar a cor selecionada para a nova ReturnedQuestion
       setSelectedColors((prevColors) => {
         const newColors = [...prevColors];
         newColors[index] = color;
         return newColors;
       });
     }
-    if (completedCount < 4) { setCompletedCount((prevCount) => prevCount + 1); }
-  }
+    if (completedCount < 4) {
+      setCompletedCount((prevCount) => prevCount + 1);
+    }
+    setClicked(newClicked);
+    setShowed(newShowed);
+  };
 
   return (
     <>
@@ -88,18 +101,9 @@ function App() {
           clicked={clicked}
           showOptions={showOptions}
         />
-        <Footer
-          completedCount={completedCount}
-        />
+        <Footer completedCount={completedCount} />
       </Container>
     </>
   );
 }
 export default App;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  height: 100vh;
-`;
